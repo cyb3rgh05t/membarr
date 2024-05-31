@@ -141,10 +141,8 @@ class app(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print('------')
-        print("{:^41}".format(f"MEMBARR V {MEMBARR_VERSION}"))
-        print(f'Made by Yoruio https://github.com/Yoruio/\n')
-        print(f'Forked from Invitarr https://github.com/Sleepingpirates/Invitarr')
-        print(f'Named by lordfransie')
+        print("{:^41}".format(f"StreamNet Plex Inviter V {MEMBARR_VERSION}"))
+        print(f'Made by cyb3rgh05t https://github.com/cyb3rgh05t/\n')
         print(f'Logged in as {self.bot.user} (ID: {self.bot.user.id})')
         print('------')
 
@@ -156,8 +154,9 @@ class app(commands.Cog):
     
     async def getemail(self, after):
         email = None
-        await embedinfo(after,'Welcome To '+ PLEX_SERVER_NAME +'. Please reply with your email to be added to the Plex server!')
-        await embedinfo(after,'If you do not respond within 24 hours, the request will be cancelled, and the server admin will need to add you manually.')
+        #await self.embedtitle(after,'<:streamnet:855771751820296232> **'+ PLEX_SERVER_NAME +' Invite** 🎟️')
+        #await self.embedemail(after,'Antworte einfach mit deiner **PLEX Mail**, damit ich dich bei **'+ PLEX_SERVER_NAME +'** hinzufügen kann!\n\n Ich werde 24 Stunden auf deine Nachricht warten. Wenn du bis dahin nicht geantwortet hast, werde ich den Befehl abbrechen.')
+        await embedemail(after,'Antworte einfach mit deiner **PLEX Mail**, damit ich dich bei **'+ PLEX_SERVER_NAME +'** hinzufügen kann!')
         while(email == None):
             def check(m):
                 return m.author == after and not m.guild
@@ -167,11 +166,11 @@ class app(commands.Cog):
                     return str(email.content)
                 else:
                     email = None
-                    message = "The email you provided is invalid, please respond only with the email you used to sign up for Plex."
-                    await embederror(after, message)
+                    message = "<:rejected:995614671128244224> Ungültige **Plex Mail**. Bitte gib nur deine **Plex Mail** ein und nichts anderes."
+                    await embederroremail(after, message)
                     continue
             except asyncio.TimeoutError:
-                message = "Timed out. Please contact the server admin directly."
+                message = '⏳ Zeitüberschreitung\n\nWende dich an den **'+ PLEX_SERVER_NAME +'** Admin <@408885990971670531> damit der dich manuell hinzufügen kann.'
                 await embederror(after, message)
                 return None
     
@@ -205,25 +204,25 @@ class app(commands.Cog):
     async def addtoplex(self, email, response):
         if(plexhelper.verifyemail(email)):
             if plexhelper.plexadd(plex,email,Plex_LIBS):
-                await embedinfo(response, 'This email address has been added to plex')
+                await embedinfo(response, '<:approved:995615632961847406> Deine **Plex Mail** wurde zu **'+ PLEX_SERVER_NAME +'** hinzugefügt')
                 return True
             else:
-                await embederror(response, 'There was an error adding this email address. Check logs.')
+                await embederror(response, '<:rejected:995614671128244224> There was an error adding this email address. Check logs.')
                 return False
         else:
-            await embederror(response, 'Invalid email.')
+            await embederror(response, '<:rejected:995614671128244224> Invalid email.')
             return False
 
     async def removefromplex(self, email, response):
         if(plexhelper.verifyemail(email)):
             if plexhelper.plexremove(plex,email):
-                await embedinfo(response, 'This email address has been removed from plex.')
+                await embedinfo(response, '<:approved:995615632961847406> This email address has been removed from **'+ PLEX_SERVER_NAME +'**.')
                 return True
             else:
-                await embederror(response, 'There was an error removing this email address. Check logs.')
+                await embederror(response, '<:rejected:995614671128244224> There was an error removing this email address. Check logs.')
                 return False
         else:
-            await embederror(response, 'Invalid email.')
+            await embederror(response, '<:rejected:995614671128244224> Invalid email.')
             return False
     
     async def addtojellyfin(self, username, password, response):
@@ -270,13 +269,13 @@ class app(commands.Cog):
                     if role is not None and (role in after.roles and role not in before.roles):
                         email = await self.getemail(after)
                         if email is not None:
-                            await embedinfo(after, "Got it we will be adding your email to plex shortly!")
+                            await embedinfo(after, '**GOTCHA**, wir werden deine Email bearbeiten!')
                             if plexhelper.plexadd(plex,email,Plex_LIBS):
                                 db.save_user_email(str(after.id), email)
                                 await asyncio.sleep(5)
-                                await embedinfo(after, 'You have Been Added To Plex! Login to plex and accept the invite!')
+                                await embedinfo(after, '<:approved:995615632961847406> **'+ email +'** wurde bei **'+ PLEX_SERVER_NAME +'** hinzugefügt!\n\n➡️ **[StreamNet Invite akzeptieren](https://app.plex.tv/desktop/#!/settings/manage-library-access)**')
                             else:
-                                await embedinfo(after, 'There was an error adding this email address. Message Server Admin.')
+                                await embederror(after, '<:rejected:995614671128244224> Es gab einen Fehler beim Hinzufügen deiner Email. Bitte kontaktiere <@408885990971670531> .')
                         plex_processed = True
                         break
 
@@ -288,11 +287,11 @@ class app(commands.Cog):
                             plexhelper.plexremove(plex,email)
                             deleted = db.remove_email(user_id)
                             if deleted:
-                                print("Removed Plex email {} from db".format(after.name))
+                                print("Removed Plex email {} from DataBase".format(after.name))
                                 #await secure.send(plexname + ' ' + after.mention + ' was removed from plex')
                             else:
                                 print("Cannot remove Plex from this user.")
-                            await embedinfo(after, "You have been removed from Plex")
+                            await embedinfo(after, '<:approved:995615632961847406> Du wurdest bei **'+ PLEX_SERVER_NAME +'** entfernt!')
                         except Exception as e:
                             print(e)
                             print("{} Cannot remove this user from plex.".format(email))
@@ -361,7 +360,7 @@ class app(commands.Cog):
             
         deleted = db.delete_user(member.id)
         if deleted:
-            print("Removed {} from db because user left discord server.".format(email))
+            print("Removed {} from DataBase because user left Discord server.".format(email))
 
     @app_commands.checks.has_permissions(administrator=True)
     @plex_commands.command(name="invite", description="Invite a user to Plex")
@@ -393,14 +392,14 @@ class app(commands.Cog):
         
         # Check email if provided
         if email and not plexhelper.verifyemail(email):
-            await embederror(interaction.response, "Invalid email.")
+            await embederror(interaction.response, '<:rejected:995614671128244224> Invalid email.')
             return
 
         try:
             db.save_user_all(str(member.id), email, jellyfin_username)
-            await embedinfo(interaction.response,'User was added to the database.')
+            await embedinfo(interaction.response,'<:approved:995615632961847406> Email and User were added to the Database.')
         except Exception as e:
-            await embedinfo(interaction.response, 'There was an error adding this user to database. Check Membarr logs for more info')
+            await embederror(interaction.response, '<:rejected:995614671128244224> There was an error adding this email address to Database. Check Membarr logs for more info')
             print(e)
 
     @app_commands.checks.has_permissions(administrator=True)
@@ -432,7 +431,7 @@ class app(commands.Cog):
             f = open("db.txt", "w")
             f.write(table.draw())
             f.close()
-            await interaction.response.send_message("Database too large! Total: {total}".format(total = total),file=discord.File('db.txt'), ephemeral=True)
+            await interaction.response.send_message("DataBase too large! Total: {total}".format(total = total),file=discord.File('db.txt'), ephemeral=True)
         else:
             await interaction.response.send_message(embed = embed, ephemeral=True)
         
@@ -440,7 +439,7 @@ class app(commands.Cog):
     @app_commands.checks.has_permissions(administrator=True)
     @membarr_commands.command(name="dbrm", description="Remove user from Membarr database")
     async def dbrm(self, interaction: discord.Interaction, position: int):
-        embed = discord.Embed(title='Membarr Database.')
+        embed = discord.Embed(title='StreamNet Plex Database.')
         all = db.read_all()
         for index, peoples in enumerate(all):
             index = index + 1
@@ -461,10 +460,10 @@ class app(commands.Cog):
             username = discord_user.name
             deleted = db.delete_user(id)
             if deleted:
-                print("Removed {} from db".format(username))
-                await embedinfo(interaction.response,"Removed {} from db".format(username))
+                print("Removed {} from DataBase".format(username))
+                await embedinfo(interaction.response,"<:approved:995615632961847406> Removed {} from Database".format(username))
             else:
-                await embederror(interaction.response,"Cannot remove this user from db.")
+                await embederror(interaction.response,"<:rejected:995614671128244224> Cannot remove this User from DataBase.")
         except Exception as e:
             print(e)
 
