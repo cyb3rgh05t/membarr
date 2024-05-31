@@ -4,7 +4,7 @@ from app.bot.helper.textformat import bcolors
 import discord
 from discord.ext import commands
 from discord import app_commands
-from datetime import datetime timedelta
+from datetime import timedelta, datetime
 import asyncio
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
