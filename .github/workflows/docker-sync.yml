@@ -36,11 +36,5 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: yoruio/membarr:latest
-      -
-        name: Build and push to invitarr
-        uses: docker/build-push-action@v3
-        with:
-          push: true
-          tags: yoruio/invitarr:latest
+          tags: cyb3rgh05t/membarr:latest
      
