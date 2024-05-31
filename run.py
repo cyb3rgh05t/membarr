@@ -27,7 +27,6 @@ class Bot(commands.Bot):
         intents = discord.Intents.all()
         intents.members = True
         intents.message_content = True
-        super().__init__(command_prefix=".", intents=intents)
 
     async def on_ready(self):
         print("Bot is online.")
