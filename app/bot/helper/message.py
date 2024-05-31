@@ -49,16 +49,16 @@ async def embederror(recipient, message, ephemeral=True):
     await send_embed(recipient, embed1, ephemeral)
 
 async def embedinfo(recipient, message, ephemeral=True):
-    embed1 = discord.Embed(title="",description=message, color=0x171717)
+    embed1 = discord.Embed(title="",description=message, color=0x00FF00)
     await send_embed(recipient, embed1, ephemeral)
 
 async def embedtitle(recipient, message, ephemeral=True):
-        embed1 = discord.Embed(title=message, color=0x171717)
+        embed1 = discord.Embed(title=message, color=0x00FF00)
         await send_embed(recipient, embed1, ephemeral)
 
 async def embedemail(recipient, message, ephemeral=True):
         time = (datetime.now() + timedelta(hours=24)).strftime("%d. %B %Y | %H:%M:%S")
-        embed1 = discord.Embed(title='**'+ PLEX_SERVER_NAME +' Invite**  🎟️',description=message, color=0x171717)
+        embed1 = discord.Embed(title='**'+ PLEX_SERVER_NAME +' Invite**  🎟️',description=message, color=0x00FF00)
         embed1.add_field(name="Gültig bis:", value='``'+ time +'``', inline=False)
         await send_embed(recipient, embed1, ephemeral)
 
@@ -68,7 +68,7 @@ async def embederroremail(recipient, message, ephemeral=True):
         await send_embed(recipient, embed1, ephemeral)
 
 async def embedinfoaccept(recipient, message, ephemeral=True):
-        embed1 = discord.Embed(title="",description=message, color=0x171717)
+        embed1 = discord.Embed(title="",description=message, color=0x00FF00)
         #embed1.add_field(name="Plex Mail:", value=''+ email +'', inline=False)
         await send_embed(recipient, embed1, ephemeral)
 
