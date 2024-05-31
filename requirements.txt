@@ -1,6 +1,6 @@
-plex.py==0.9.0
-PlexAPI==4.13.0
+plex.py
+PlexAPI
 texttable
 python-dotenv
 requests
-discord.py==2.0.1
+discord.py
