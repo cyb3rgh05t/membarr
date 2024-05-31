@@ -121,10 +121,10 @@ if USE_PLEX and plex_configured:
             print("Using Plex login info")
             account = MyPlexAccount(PLEXUSER, PLEXPASS)
             plex = account.resource(PLEX_SERVER_NAME).connect()  # returns a PlexServer instance
-        print('Logged into plex!')
+        print('Logged into Plex!')
     except Exception as e:
         # probably rate limited.
-        print('Error with plex login. Please check Plex authentication details. If you have restarted the bot multiple times recently, this is most likely due to being ratelimited on the Plex API. Try again in 10 minutes.')
+        print('Error with Plex login. Please check Plex authentication details. If you have restarted the bot multiple times recently, this is most likely due to being ratelimited on the Plex API. Try again in 10 minutes.')
         print(f'Error: {e}')
 else:
     print(f"Plex {'disabled' if not USE_PLEX else 'not configured'}. Skipping Plex login.")
@@ -155,8 +155,6 @@ class app(commands.Cog):
     
     async def getemail(self, after):
         email = None
-        #await self.embedtitle(after,'<:streamnet:855771751820296232> **'+ PLEX_SERVER_NAME +' Invite** 🎟️')
-        #await self.embedemail(after,'Antworte einfach mit deiner **PLEX Mail**, damit ich dich bei **'+ PLEX_SERVER_NAME +'** hinzufügen kann!\n\n Ich werde 24 Stunden auf deine Nachricht warten. Wenn du bis dahin nicht geantwortet hast, werde ich den Befehl abbrechen.')
         await embedemail(after,'Antworte einfach mit deiner **PLEX Mail**, damit ich dich bei **'+ PLEX_SERVER_NAME +'** hinzufügen kann!')
         while(email == None):
             def check(m):
@@ -274,7 +272,7 @@ class app(commands.Cog):
                             if plexhelper.plexadd(plex,email,Plex_LIBS):
                                 db.save_user_email(str(after.id), email)
                                 await asyncio.sleep(5)
-                                await embedinfo(after, '<:approved:995615632961847406> **'+ email +'** wurde bei **'+ PLEX_SERVER_NAME +'** hinzugefügt!\n\n➡️ **[StreamNet Invite akzeptieren](https://app.plex.tv/desktop/#!/settings/manage-library-access)**')
+                                await embedinfo(after, '**Whoop, Whoop**\n\n<:approved:995615632961847406> **'+ email +'** \n\nwurde bei **'+ PLEX_SERVER_NAME +'** hinzugefügt!\n\n➡️ **['+ PLEX_SERVER_NAME +' Invite akzeptieren](https://app.plex.tv/desktop/#!/settings/manage-library-access)**')
                             else:
                                 await embederror(after, '<:rejected:995614671128244224> Es gab einen Fehler beim Hinzufügen deiner Email. Bitte kontaktiere <@408885990971670531> .')
                         plex_processed = True
@@ -295,7 +293,7 @@ class app(commands.Cog):
                             await embedinfo(after, '<:approved:995615632961847406> Du wurdest bei **'+ PLEX_SERVER_NAME +'** entfernt!')
                         except Exception as e:
                             print(e)
-                            print("{} Cannot remove this user from plex.".format(email))
+                            print("{} Cannot remove this user from Plex.".format(email))
                         plex_processed = True
                         break
                 if plex_processed:
@@ -412,7 +410,7 @@ class app(commands.Cog):
         table = texttable.Texttable()
         table.set_cols_dtype(["t", "t", "t", "t"])
         table.set_cols_align(["c", "c", "c", "c"])
-        header = ("#", "Name", "Email", "Jellyfin")
+        header = ("#", "DISCORD", "PLEX", "JELLYFIN")
         table.add_row(header)
         for index, peoples in enumerate(all):
             index = index + 1
