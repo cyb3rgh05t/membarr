@@ -1,4 +1,5 @@
 import discord
+from datetime import datetime
 
 # these were copied from the app object. They could be made static instead but I'm lazy.
 async def embederror(recipient, message, ephemeral=True):
@@ -28,7 +29,7 @@ async def embedinfoaccept(recipient, message, ephemeral=True):
         embed1 = discord.Embed(title="",description=message, color=0x171717)
         #embed1.add_field(name="Plex Mail:", value=''+ email +'', inline=False)
         await send_embed(recipient, embed1, ephemeral)
-        
+
 async def embedcustom(recipient, title, fields, ephemeral=True):
     embed = discord.Embed(title=title)
     for k in fields:
